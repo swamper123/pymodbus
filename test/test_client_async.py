@@ -222,16 +222,6 @@ class TestAsynchronousClient(object):
         protocol.stop()
         assert (not client._connected)
 
-    def testSerialAsyncioClientPython2(self):
-        """
-        Test Serial asynchronous asyncio client exits on python2
-        :return:
-        """
-        with pytest.raises(SystemExit) as pytest_wrapped_e:
-            AsyncModbusSerialClient(schedulers.ASYNC_IO, method="rtu", port=SERIAL_PORT)
-        assert pytest_wrapped_e.type == SystemExit
-        assert pytest_wrapped_e.value.code == 1
-
     @patch("asyncio.get_event_loop")
     @patch("asyncio.gather", side_effect=mock_asyncio_gather)
     @pytest.mark.parametrize("method, framer", [("rtu", ModbusRtuFramer),
