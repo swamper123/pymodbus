@@ -122,7 +122,7 @@ class TestAsyncioClient(object):
         mock_loop.create_connection.assert_called_once_with(mock.ANY, mock.sentinel.HOST, mock.sentinel.PORT)
         assert mock_async.call_count == 0
 
-    @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
+    #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
     async def test_factory_start_failing_and_retried(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
@@ -138,7 +138,7 @@ class TestAsyncioClient(object):
             if PYTHON_VERSION <= (3, 7):
                 mock_async.assert_called_once_with(mock.sentinel.RECONNECT_GENERATOR, loop=mock_loop)
 
-    @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.sleep')
+    #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.sleep')
     async def test_factory_reconnect(self, mock_sleep):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
