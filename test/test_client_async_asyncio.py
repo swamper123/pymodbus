@@ -13,13 +13,10 @@ from pymodbus.bit_read_message import ReadCoilsRequest, ReadCoilsResponse
 protocols = [ModbusUdpClientProtocol, ModbusClientProtocol]
 
 
-def future_or_task_decorator(func):
-    def wrapper():
-        if PYTHON_VERSION[1] == 6:
-            return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
-        return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_future')
-
-    return wrapper
+def future_or_task_decorator():
+    if PYTHON_VERSION[1] == 6:
+        return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
+    return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_future')
 
 class TestAsyncioClient(object):
     def test_protocol_connection_state_propagation_to_factory(self):
@@ -96,7 +93,7 @@ class TestAsyncioClient(object):
         assert client.protocol is mock.sentinel.PROTOCOL
 
     #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
-    @future_or_task_decorator
+    @future_or_task_decorator()
     def test_factory_protocol_lost_connection(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
@@ -123,7 +120,7 @@ class TestAsyncioClient(object):
 
 
     #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_task')
-    @future_or_task_decorator
+    @future_or_task_decorator()
     async def test_factory_start_success(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
@@ -134,7 +131,7 @@ class TestAsyncioClient(object):
         assert mock_async.call_count == 0
 
     # @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_task')
-    @future_or_task_decorator
+    @future_or_task_decorator()
     async def test_factory_start_failing_and_retried(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
