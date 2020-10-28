@@ -16,7 +16,7 @@ protocols = [ModbusUdpClientProtocol, ModbusClientProtocol]
 def future_or_task_decorator():
     if PYTHON_VERSION[1] == 6:
         return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
-    return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_future')
+    return mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_task')
 
 class TestAsyncioClient(object):
     def test_protocol_connection_state_propagation_to_factory(self):
