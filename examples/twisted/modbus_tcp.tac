@@ -10,7 +10,6 @@ from twisted.python.logfile import DailyLogFile
 from pymodbus.constants import Defaults
 from pymodbus.server.async import ModbusServerFactory
 from pymodbus.transaction import ModbusSocketFramer
-from pymodbus.internal.ptwisted import InstallManagementConsole
 
 def BuildService():
     """
@@ -19,7 +18,7 @@ def BuildService():
     context = None
     framer = ModbusSocketFramer
     factory = ModbusServerFactory(context, framer)
-    InstallManagementConsole({ 'server' : factory })
+    raise NotImplemented("This feature was only usable with Python2, which is not supported anymore")
     application = internet.TCPServer(Defaults.Port, factory)
     return application
 

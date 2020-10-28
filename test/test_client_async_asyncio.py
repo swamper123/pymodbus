@@ -1,22 +1,18 @@
-from pymodbus.compat import IS_PYTHON3, PYTHON_VERSION
+from pymodbus.compat import PYTHON_VERSION
 import pytest
-if IS_PYTHON3 and PYTHON_VERSION >= (3, 4):
-    from unittest import mock
-    from pymodbus.client.asynchronous.async_io import (
-        ReconnectingAsyncioModbusTcpClient,
-        ModbusClientProtocol, ModbusUdpClientProtocol)
-    from test.asyncio_test_helper import return_as_coroutine, run_coroutine
-    from pymodbus.factory import ClientDecoder
-    from pymodbus.exceptions import ConnectionException
-    from pymodbus.transaction import ModbusSocketFramer
-    from pymodbus.bit_read_message import ReadCoilsRequest, ReadCoilsResponse
-    protocols = [ModbusUdpClientProtocol, ModbusClientProtocol]
-else:
-    import mock
-    protocols = [None, None]
+from unittest import mock
+from pymodbus.client.asynchronous.async_io import (ReconnectingAsyncioModbusTcpClient,
+                                                   ModbusClientProtocol,
+                                                   ModbusUdpClientProtocol)
+from test.asyncio_test_helper import return_as_coroutine, run_coroutine
+from pymodbus.factory import ClientDecoder
+from pymodbus.exceptions import ConnectionException
+from pymodbus.transaction import ModbusSocketFramer
+from pymodbus.bit_read_message import ReadCoilsRequest, ReadCoilsResponse
+
+protocols = [ModbusUdpClientProtocol, ModbusClientProtocol]
 
 
-@pytest.mark.skipif(not IS_PYTHON3, reason="requires python3.4 or above")
 class TestAsyncioClient(object):
     def test_protocol_connection_state_propagation_to_factory(self):
         protocol = ModbusClientProtocol()
@@ -59,7 +55,6 @@ class TestAsyncioClient(object):
         assert client.delay_ms > initial_delay
         client.reset_delay()
         assert client.delay_ms == initial_delay
-
 
     def test_factory_stop(self):
         mock_protocol_class = mock.MagicMock()
@@ -108,7 +103,8 @@ class TestAsyncioClient(object):
         client.host = mock.sentinel.HOST
         client.port = mock.sentinel.PORT
         client.protocol = mock.sentinel.PROTOCOL
-        with mock.patch('pymodbus.client.asynchronous.async_io.ReconnectingAsyncioModbusTcpClient._reconnect') as mock_reconnect:
+        with mock.patch(
+                'pymodbus.client.asynchronous.async_io.ReconnectingAsyncioModbusTcpClient._reconnect') as mock_reconnect:
             mock_reconnect.return_value = mock.sentinel.RECONNECT_GENERATOR
             client.protocol_lost_connection(mock.sentinel.PROTOCOL)
             if PYTHON_VERSION <= (3, 7):
@@ -134,7 +130,8 @@ class TestAsyncioClient(object):
         client = ReconnectingAsyncioModbusTcpClient(protocol_class=mock_protocol_class, loop=mock_loop)
 
         # check whether reconnect is called upon failed connection attempt:
-        with mock.patch('pymodbus.client.asynchronous.async_io.ReconnectingAsyncioModbusTcpClient._reconnect') as mock_reconnect:
+        with mock.patch(
+                'pymodbus.client.asynchronous.async_io.ReconnectingAsyncioModbusTcpClient._reconnect') as mock_reconnect:
             mock_reconnect.return_value = mock.sentinel.RECONNECT_GENERATOR
             run_coroutine(client.start(mock.sentinel.HOST, mock.sentinel.PORT))
             mock_reconnect.assert_called_once_with()
@@ -192,7 +189,7 @@ class TestAsyncioClient(object):
     @pytest.mark.skip("To fix")
     @pytest.mark.parametrize("protocol", protocols)
     def testClientProtocolConnectionLost(self, protocol):
-        ''' Test the client protocol connection lost'''
+        """ Test the client protocol connection lost"""
         framer = ModbusSocketFramer(None)
         protocol = protocol(framer=framer, timeout=0)
         protocol.execute = mock.MagicMock()
@@ -217,7 +214,7 @@ class TestAsyncioClient(object):
 
     @pytest.mark.parametrize("protocol", protocols)
     def testClientProtocolDataReceived(self, protocol):
-        ''' Test the client protocol data received '''
+        """ Test the client protocol data received """
         protocol = protocol(ModbusSocketFramer(ClientDecoder()))
         transport = mock.MagicMock()
         protocol.connection_made(transport)
@@ -237,7 +234,7 @@ class TestAsyncioClient(object):
     @pytest.mark.skip("To fix")
     @pytest.mark.parametrize("protocol", protocols)
     def testClientProtocolExecute(self, protocol):
-        ''' Test the client protocol execute method '''
+        """ Test the client protocol execute method """
         framer = ModbusSocketFramer(None)
         protocol = protocol(framer=framer)
         transport = mock.MagicMock()
@@ -251,7 +248,7 @@ class TestAsyncioClient(object):
 
     @pytest.mark.parametrize("protocol", protocols)
     def testClientProtocolHandleResponse(self, protocol):
-        ''' Test the client protocol handles responses '''
+        """ Test the client protocol handles responses """
         protocol = protocol()
         transport = mock.MagicMock()
         protocol.connection_made(transport=transport)
@@ -270,7 +267,7 @@ class TestAsyncioClient(object):
 
     @pytest.mark.parametrize("protocol", protocols)
     def testClientProtocolBuildResponse(self, protocol):
-        ''' Test the udp client protocol builds responses '''
+        """ Test the udp client protocol builds responses """
         protocol = protocol()
         assert not len(list(protocol.transaction))
 

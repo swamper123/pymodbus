@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pytest
 import unittest
 from binascii import a2b_hex
@@ -26,13 +26,13 @@ class ModbusTransactionTest(unittest.TestCase):
     # ----------------------------------------------------------------------- #
     def setUp(self):
         """ Sets up the test environment """
-        self.client   = None
-        self.decoder  = ServerDecoder()
-        self._tcp     = ModbusSocketFramer(decoder=self.decoder, client=None)
-        self._tls     = ModbusTlsFramer(decoder=self.decoder, client=None)
-        self._rtu     = ModbusRtuFramer(decoder=self.decoder, client=None)
-        self._ascii   = ModbusAsciiFramer(decoder=self.decoder, client=None)
-        self._binary  = ModbusBinaryFramer(decoder=self.decoder, client=None)
+        self.client = None
+        self.decoder = ServerDecoder()
+        self._tcp = ModbusSocketFramer(decoder=self.decoder, client=None)
+        self._tls = ModbusTlsFramer(decoder=self.decoder, client=None)
+        self._rtu = ModbusRtuFramer(decoder=self.decoder, client=None)
+        self._ascii = ModbusAsciiFramer(decoder=self.decoder, client=None)
+        self._binary = ModbusBinaryFramer(decoder=self.decoder, client=None)
         self._manager = DictTransactionManager(self.client)
         self._queue_manager = FifoTransactionManager(self.client)
         self._tm = ModbusTransactionManager(self.client)
@@ -143,13 +143,15 @@ class ModbusTransactionTest(unittest.TestCase):
     def testDictTransactionManagerTID(self):
         """ Test the dict transaction manager TID """
         for tid in range(1, self._manager.getNextTID() + 10):
-            self.assertEqual(tid+1, self._manager.getNextTID())
+            self.assertEqual(tid + 1, self._manager.getNextTID())
         self._manager.reset()
         self.assertEqual(1, self._manager.getNextTID())
 
     def testGetDictTransactionManagerTransaction(self):
         """ Test the dict transaction manager """
+
         class Request: pass
+
         self._manager.reset()
         handle = Request()
         handle.transaction_id = self._manager.getNextTID()
@@ -160,7 +162,9 @@ class ModbusTransactionTest(unittest.TestCase):
 
     def testDeleteDictTransactionManagerTransaction(self):
         """ Test the dict transaction manager """
+
         class Request: pass
+
         self._manager.reset()
         handle = Request()
         handle.transaction_id = self._manager.getNextTID()
@@ -176,13 +180,15 @@ class ModbusTransactionTest(unittest.TestCase):
     def testFifoTransactionManagerTID(self):
         """ Test the fifo transaction manager TID """
         for tid in range(1, self._queue_manager.getNextTID() + 10):
-            self.assertEqual(tid+1, self._queue_manager.getNextTID())
+            self.assertEqual(tid + 1, self._queue_manager.getNextTID())
         self._queue_manager.reset()
         self.assertEqual(1, self._queue_manager.getNextTID())
 
     def testGetFifoTransactionManagerTransaction(self):
         """ Test the fifo transaction manager """
+
         class Request: pass
+
         self._queue_manager.reset()
         handle = Request()
         handle.transaction_id = self._queue_manager.getNextTID()
@@ -193,7 +199,9 @@ class ModbusTransactionTest(unittest.TestCase):
 
     def testDeleteFifoTransactionManagerTransaction(self):
         """ Test the fifo transaction manager """
+
         class Request: pass
+
         self._queue_manager.reset()
         handle = Request()
         handle.transaction_id = self._queue_manager.getNextTID()
@@ -290,8 +298,8 @@ class ModbusTransactionTest(unittest.TestCase):
         """ Test a tcp frame packet build """
         expected = ModbusRequest()
         expected.transaction_id = 0x0001
-        expected.protocol_id    = 0x1234
-        expected.unit_id        = 0xff
+        expected.protocol_id = 0x1234
+        expected.unit_id = 0xff
         msg = b"\x00\x01\x12\x34\x00\x04\xff\x02\x12\x34"
         self._tcp.addToFrame(msg)
         self.assertTrue(self._tcp.checkFrame())
@@ -307,9 +315,9 @@ class ModbusTransactionTest(unittest.TestCase):
         ModbusRequest.encode = lambda self: b''
         message = ModbusRequest()
         message.transaction_id = 0x0001
-        message.protocol_id    = 0x1234
-        message.unit_id        = 0xff
-        message.function_code  = 0x01
+        message.protocol_id = 0x1234
+        message.unit_id = 0xff
+        message.function_code = 0x01
         expected = b"\x00\x01\x12\x34\x00\x02\xff\x01"
         actual = self._tcp.buildPacket(message)
         self.assertEqual(expected, actual)
@@ -375,15 +383,16 @@ class ModbusTransactionTest(unittest.TestCase):
         msg1 = b""
         msg2 = b"\x01\x12\x34\x00\x08"
         result = self._tls.decode_data(msg1)
-        self.assertEqual(dict(), result);
+        self.assertEqual(dict(), result)
         result = self._tls.decode_data(msg2)
-        self.assertEqual(dict(fcode=1), result);
+        self.assertEqual(dict(fcode=1), result)
         self._tls.advanceFrame()
 
     def testTLSIncomingPacket(self):
         msg = b"\x01\x12\x34\x00\x08"
 
         unit = 0x01
+
         def mock_callback(self):
             pass
 
@@ -440,7 +449,7 @@ class ModbusTransactionTest(unittest.TestCase):
         old_encode = ModbusRequest.encode
         ModbusRequest.encode = lambda self: b''
         message = ModbusRequest()
-        message.function_code  = 0x01
+        message.function_code = 0x01
         expected = b"\x01"
         actual = self._tls.buildPacket(message)
         self.assertEqual(expected, actual)
@@ -505,9 +514,9 @@ class ModbusTransactionTest(unittest.TestCase):
         old_encode = ModbusRequest.encode
         ModbusRequest.encode = lambda self: b''
         message = ModbusRequest()
-        message.unit_id        = 0xff
-        message.function_code  = 0x01
-        expected = b"\xff\x01\x81\x80" # only header + CRC - no data
+        message.unit_id = 0xff
+        message.function_code = 0x01
+        expected = b"\xff\x01\x81\x80"  # only header + CRC - no data
         actual = self._rtu.buildPacket(message)
         self.assertEqual(expected, actual)
         ModbusRequest.encode = old_encode
@@ -539,13 +548,14 @@ class ModbusTransactionTest(unittest.TestCase):
         self._rtu.advanceFrame.assert_called_with()
         self.assertTrue(self._rtu.advanceFrame.called)
 
-        #Check errors
+        # Check errors
         self._rtu.decoder.decode = MagicMock(return_value=None)
         self.assertRaises(ModbusIOException, lambda: self._rtu._process(mock_callback))
 
     def testRTUProcessIncomingPAkcets(self):
         mock_data = b"\x00\x01\x00\x00\x00\x01\xfc\x1b"
         unit = 0x00
+
         def mock_callback(self):
             pass
 
@@ -608,8 +618,8 @@ class ModbusTransactionTest(unittest.TestCase):
         old_encode = ModbusRequest.encode
         ModbusRequest.encode = lambda self: b''
         message = ModbusRequest()
-        message.unit_id        = 0xff
-        message.function_code  = 0x01
+        message.unit_id = 0xff
+        message.function_code = 0x01
         expected = b":FF0100\r\n"
         actual = self._ascii.buildPacket(message)
         self.assertEqual(expected, actual)
@@ -618,6 +628,7 @@ class ModbusTransactionTest(unittest.TestCase):
     def testAsciiProcessIncomingPakcets(self):
         mock_data = msg = b':F7031389000A60\r\n'
         unit = 0x00
+
         def mock_callback(mock_data, *args, **kwargs):
             pass
 
@@ -632,7 +643,7 @@ class ModbusTransactionTest(unittest.TestCase):
     # ----------------------------------------------------------------------- #
     def testBinaryFramerTransactionReady(self):
         """ Test a binary frame transaction """
-        msg  = b'\x7b\x01\x03\x00\x00\x00\x05\x85\xC9\x7d'
+        msg = b'\x7b\x01\x03\x00\x00\x00\x05\x85\xC9\x7d'
         self.assertFalse(self._binary.isFrameReady())
         self.assertFalse(self._binary.checkFrame())
         self._binary.addToFrame(msg)
@@ -645,7 +656,7 @@ class ModbusTransactionTest(unittest.TestCase):
 
     def testBinaryFramerTransactionFull(self):
         """ Test a full binary frame transaction """
-        msg  = b'\x7b\x01\x03\x00\x00\x00\x05\x85\xC9\x7d'
+        msg = b'\x7b\x01\x03\x00\x00\x00\x05\x85\xC9\x7d'
         pack = msg[2:-3]
         self._binary.addToFrame(msg)
         self.assertTrue(self._binary.checkFrame())
@@ -679,8 +690,8 @@ class ModbusTransactionTest(unittest.TestCase):
         old_encode = ModbusRequest.encode
         ModbusRequest.encode = lambda self: b''
         message = ModbusRequest()
-        message.unit_id        = 0xff
-        message.function_code  = 0x01
+        message.unit_id = 0xff
+        message.function_code = 0x01
         expected = b'\x7b\xff\x01\x81\x80\x7d'
         actual = self._binary.buildPacket(message)
         self.assertEqual(expected, actual)
@@ -689,6 +700,7 @@ class ModbusTransactionTest(unittest.TestCase):
     def testBinaryProcessIncomingPacket(self):
         mock_data = b'\x7b\x01\x03\x00\x00\x00\x05\x85\xC9\x7d'
         unit = 0x00
+
         def mock_callback(mock_data):
             pass
 
@@ -697,6 +709,7 @@ class ModbusTransactionTest(unittest.TestCase):
         # Test failure:
         self._binary.checkFrame = MagicMock(return_value=False)
         self._binary.processIncomingPacket(mock_data, mock_callback, unit)
+
 
 # ----------------------------------------------------------------------- #
 # Main

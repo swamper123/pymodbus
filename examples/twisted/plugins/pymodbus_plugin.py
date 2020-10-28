@@ -10,7 +10,6 @@ from twisted.application import internet
 from pymodbus.constants import Defaults
 from pymodbus.server.asynchronous import ModbusServerFactory
 from pymodbus.transaction import ModbusSocketFramer
-from pymodbus.internal.ptwisted import InstallManagementConsole
 
 class Options(usage.Options):
     """
@@ -46,7 +45,7 @@ class ModbusServiceMaker(object):
         context = self._build_context(options['store'])
         factory = ModbusServerFactory(None, framer)
         if options['console']:
-            InstallManagementConsole({ 'server' : factory })
+            raise NotImplemented("This feature was only usable with Python2, which is not supported anymore")
         return server(int(options["port"]), factory)
 
     def _build_context(self, path):

@@ -1,13 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import unittest
 from pymodbus.other_message import *
 import mock
 
 
 class ModbusOtherMessageTest(unittest.TestCase):
-    '''
+    """
     This is the unittest for the pymodbus.other_message module
-    '''
+    """
 
     def setUp(self):
         self.requests = [
@@ -25,7 +25,7 @@ class ModbusOtherMessageTest(unittest.TestCase):
         ]
 
     def tearDown(self):
-        ''' Cleans up the test environment '''
+        """ Cleans up the test environment """
         del self.requests
         del self.responses
 
@@ -79,13 +79,13 @@ class ModbusOtherMessageTest(unittest.TestCase):
         self.assertEqual(response.encode(), b'\x06\xff\xff\x00\x12\x00\x12')
 
     def testGetCommEventLogWithEvents(self):
-        response = GetCommEventLogResponse(events=[0x12,0x34,0x56])
+        response = GetCommEventLogResponse(events=[0x12, 0x34, 0x56])
         self.assertEqual(response.encode(), b'\x09\x00\x00\x00\x00\x00\x00\x12\x34\x56')
         response.decode(b'\x09\x00\x00\x00\x12\x00\x12\x12\x34\x56')
         self.assertEqual(response.status, True)
         self.assertEqual(response.message_count, 0x12)
         self.assertEqual(response.event_count, 0x12)
-        self.assertEqual(response.events, [0x12,0x34,0x56])
+        self.assertEqual(response.events, [0x12, 0x34, 0x56])
 
     def testReportSlaveId(self):
         with mock.patch("pymodbus.other_message.DeviceInformationFactory") as dif:
@@ -105,8 +105,9 @@ class ModbusOtherMessageTest(unittest.TestCase):
             response.status = False
             self.assertEqual(response.encode(), b'\x03\x12\x00\x00')
 
-#---------------------------------------------------------------------------#
+
+# ---------------------------------------------------------------------------#
 # Main
-#---------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------#
 if __name__ == "__main__":
     unittest.main()

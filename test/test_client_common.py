@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import unittest
 from pymodbus.client.common import ModbusClientMixin
 from pymodbus.bit_read_message import *
@@ -24,21 +24,21 @@ class ModbusCommonClientTests(unittest.TestCase):
     # Setup/TearDown
     #-----------------------------------------------------------------------#
     def setUp(self):
-        '''
+        """
         Initializes the test environment and builds request/result
         encoding pairs
-        '''
+        """
         self.client = MockClient()
 
     def tearDown(self):
-        ''' Cleans up the test environment '''
+        """ Cleans up the test environment """
         del self.client
 
     #-----------------------------------------------------------------------#
     # Tests
     #-----------------------------------------------------------------------#
     def testModbusClientMixinMethods(self):
-        ''' This tests that the mixing returns the correct request object '''
+        """ This tests that the mixing returns the correct request object """
         arguments = {
             'read_address': 1, 'read_count': 1,
             'write_address': 1, 'write_registers': 1

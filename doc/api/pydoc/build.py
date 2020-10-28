@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Pydoc sub-class for generating documentation for entire packages.
 

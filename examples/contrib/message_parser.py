@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Modbus Message Parser
 --------------------------------------------------------------------------
@@ -25,7 +25,6 @@ from pymodbus.transaction import ModbusSocketFramer
 from pymodbus.transaction import ModbusBinaryFramer
 from pymodbus.transaction import ModbusAsciiFramer
 from pymodbus.transaction import ModbusRtuFramer
-from pymodbus.compat import  IS_PYTHON3
 # -------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------- #
 import logging
@@ -33,7 +32,7 @@ FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
-
+modbus_log = logging.getLogger("pymodbus")
 
 # -------------------------------------------------------------------------- #
 # build a quick wrapper around the framers
@@ -55,10 +54,7 @@ class Decoder(object):
 
         :param message: The messge to decode
         """
-        if IS_PYTHON3:
-            value = message if self.encode else c.encode(message, 'hex_codec')
-        else:
-            value = message if self.encode else message.encode('hex')
+        value = message if self.encode else c.encode(message, 'hex_codec')
         print("="*80)
         print("Decoding Message %s" % value)
         print("="*80)
@@ -173,10 +169,7 @@ def get_messages(option):
             option.message = msg
 
         if not option.ascii:
-            if not IS_PYTHON3:
-                option.message = option.message.decode('hex')
-            else:
-                option.message = c.decode(option.message.encode(), 'hex_codec')
+            option.message = c.decode(option.message.encode(), 'hex_codec')
         yield option.message
     elif option.file:
         with open(option.file, "r") as handle:
