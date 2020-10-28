@@ -94,7 +94,7 @@ class TestAsyncioClient(object):
 
     #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
     @future_or_task_decorator()
-    def test_factory_protocol_lost_connection(self, mock_async):
+    async def test_factory_protocol_lost_connection(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
         client = ReconnectingAsyncioModbusTcpClient(protocol_class=mock_protocol_class, loop=mock_loop)
