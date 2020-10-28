@@ -118,7 +118,7 @@ class TestAsyncioClient(object):
         mock_loop = mock.MagicMock()
         client = ReconnectingAsyncioModbusTcpClient(protocol_class=mock_protocol_class, loop=mock_loop)
 
-        run_coroutine(client.start(mock.sentinel.HOST, mock.sentinel.PORT))
+        await run_coroutine(client.start(mock.sentinel.HOST, mock.sentinel.PORT))
         mock_loop.create_connection.assert_called_once_with(mock.ANY, mock.sentinel.HOST, mock.sentinel.PORT)
         assert mock_async.call_count == 0
 
@@ -133,7 +133,7 @@ class TestAsyncioClient(object):
         with mock.patch(
                 'pymodbus.client.asynchronous.async_io.ReconnectingAsyncioModbusTcpClient._reconnect') as mock_reconnect:
             mock_reconnect.return_value = mock.sentinel.RECONNECT_GENERATOR
-            run_coroutine(client.start(mock.sentinel.HOST, mock.sentinel.PORT))
+            await run_coroutine(client.start(mock.sentinel.HOST, mock.sentinel.PORT))
             mock_reconnect.assert_called_once_with()
             if PYTHON_VERSION <= (3, 7):
                 mock_async.assert_called_once_with(mock.sentinel.RECONNECT_GENERATOR, loop=mock_loop)
@@ -147,7 +147,7 @@ class TestAsyncioClient(object):
         client.delay_ms = 5000
 
         mock_sleep.side_effect = return_as_coroutine()
-        run_coroutine(client._reconnect())
+        await run_coroutine(client._reconnect())
         mock_sleep.assert_called_once_with(5)
         assert mock_loop.create_connection.call_count == 1
 

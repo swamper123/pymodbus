@@ -36,14 +36,13 @@ def return_as_coroutine(return_value=None):
     return functools.partial(_yielded_return, return_value)
 
 
-def run_coroutine(coro):
+async def run_coroutine(coro):
     """Runs a coroutine as top-level task by iterating through all yielded steps."""
 
     result = None
     try:
         # step through all parts of coro without scheduling anything else:
-        while True:
-            result = coro.send(result)
+            await coro(result)
     except StopIteration as ex:
         # coro reached end pass on its return value:
         return ex.value
