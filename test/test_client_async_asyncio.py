@@ -113,7 +113,7 @@ class TestAsyncioClient(object):
         assert client.protocol is None
 
     @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
-    def test_factory_start_success(self, mock_async):
+    async def test_factory_start_success(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
         client = ReconnectingAsyncioModbusTcpClient(protocol_class=mock_protocol_class, loop=mock_loop)
@@ -123,7 +123,7 @@ class TestAsyncioClient(object):
         assert mock_async.call_count == 0
 
     @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
-    def test_factory_start_failing_and_retried(self, mock_async):
+    async def test_factory_start_failing_and_retried(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
         mock_loop.create_connection = mock.MagicMock(side_effect=Exception('Did not work.'))
@@ -139,7 +139,7 @@ class TestAsyncioClient(object):
                 mock_async.assert_called_once_with(mock.sentinel.RECONNECT_GENERATOR, loop=mock_loop)
 
     @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.sleep')
-    def test_factory_reconnect(self, mock_sleep):
+    async def test_factory_reconnect(self, mock_sleep):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
         client = ReconnectingAsyncioModbusTcpClient(protocol_class=mock_protocol_class, loop=mock_loop)
