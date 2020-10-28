@@ -160,7 +160,10 @@ class ModbusBaseRequestHandler(asyncio.BaseProtocol):
                 # for UDP sockets, simply reset the frame
                 if isinstance(self, ModbusConnectedRequestHandler):
                     _logger.info("Unknown exception '%s' on stream [%s:%s] forcing disconnect" % (e, *self.client_address))
-                    self.transport.close()
+                    try:
+                        self.transport.close()
+                    except RuntimeError as re:
+                        _logger.info(re)
                 else:
                     _logger.error("Unknown error occurred %s" % e)
                     reset_frame = True  # graceful recovery

@@ -112,7 +112,7 @@ class TestAsyncioClient(object):
         assert not client.connected
         assert client.protocol is None
 
-    @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
+    #@mock.patch('pymodbus.client.asynchronous.async_io.asyncio.ensure_future')
     async def test_factory_start_success(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
