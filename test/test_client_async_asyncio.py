@@ -112,7 +112,7 @@ class TestAsyncioClient(object):
         assert not client.connected
         assert client.protocol is None
 
-    @pytest.mark.asyncio
+    @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_task')
     async def test_factory_start_success(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
@@ -122,7 +122,8 @@ class TestAsyncioClient(object):
         mock_loop.create_connection.assert_called_once_with(mock.ANY, mock.sentinel.HOST, mock.sentinel.PORT)
         assert mock_async.call_count == 0
 
-    @pytest.mark.asyncio
+
+    @mock.patch('pymodbus.client.asynchronous.async_io.asyncio.create_task')
     async def test_factory_start_failing_and_retried(self, mock_async):
         mock_protocol_class = mock.MagicMock()
         mock_loop = mock.MagicMock()
