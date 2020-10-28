@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 This creates a dummy datastore for use with the modbus simulator.
 

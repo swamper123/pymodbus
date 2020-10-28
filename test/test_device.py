@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest
 from pymodbus.device import *
 from pymodbus.events import ModbusEvent, RemoteReceiveEvent

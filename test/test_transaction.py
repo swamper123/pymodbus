@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import pytest
 import unittest
 from binascii import a2b_hex

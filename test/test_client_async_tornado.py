@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest
 from unittest.mock import patch, Mock
 from pymodbus.client.asynchronous.tornado import (BaseTornadoClient,

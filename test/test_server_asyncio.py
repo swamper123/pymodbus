@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from pymodbus.compat import PYTHON_VERSION
 import pytest
 import asynctest

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest
 from pymodbus.register_write_message import *
 from pymodbus.pdu import ModbusExceptions

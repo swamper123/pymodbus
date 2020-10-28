@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 This is a simple scraper that can be pointed at a
 modbus device to pull down all its values and store

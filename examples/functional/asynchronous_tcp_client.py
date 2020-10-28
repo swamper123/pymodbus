@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest
 from twisted.internet import reactor, protocol
 from pymodbus.constants import Defaults

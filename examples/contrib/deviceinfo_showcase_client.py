@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Pymodbus Synchronous Client Example to showcase Device Information
 --------------------------------------------------------------------------

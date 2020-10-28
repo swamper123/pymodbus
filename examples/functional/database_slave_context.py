@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest, os
 from pymodbus.datastore.database import DatabaseSlaveContext
 from base_context import ContextRunner

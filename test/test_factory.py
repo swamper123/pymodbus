@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import unittest
 from pymodbus.factory import ServerDecoder, ClientDecoder
 from pymodbus.exceptions import ModbusException

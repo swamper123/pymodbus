@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 This script is used to convert an XML dump to a
 serialized ModbusDataStore for use with the simulator.
