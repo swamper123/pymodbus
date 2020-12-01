@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 import unittest
-from pymodbus.compat import IS_PYTHON3
-if IS_PYTHON3:
-    from unittest.mock import patch, Mock
-else: # Python 2
-    from mock import patch, Mock
+from unittest.mock import patch, Mock
 from pymodbus.client.asynchronous.tornado import (BaseTornadoClient,
                                                   AsyncModbusSerialClient, AsyncModbusUDPClient, AsyncModbusTCPClient
                                                   )
@@ -228,10 +224,12 @@ class AsynchronousClientTest(unittest.TestCase):
         client = AsyncModbusSerialClient(ioloop=schedulers.IO_LOOP,
                                          framer=ModbusRtuFramer(
                                              ClientDecoder()),
-                                         port=SERIAL_PORT)
+                                         port=SERIAL_PORT,
+                                         timeout=0)
         client.connect()
         client.stream = Mock()
         client.stream.write = Mock()
+        client.stream.connection.read.return_value = b''
 
         request = ReadCoilsRequest(1, 1)
         d = client.execute(request)

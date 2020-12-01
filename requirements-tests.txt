@@ -3,7 +3,7 @@ capturer >= 2.2
 coverage >= 4.2
 cryptography>= 2.3
 mock >= 1.0.1
-pyserial-asyncio>=0.4.0;python_version>="3.4"
+pyserial-asyncio>=0.4.0;python_version>="3.6"
 pep8>=1.7.0
 pyasn1>=0.4.2
 pyserial>=3.4

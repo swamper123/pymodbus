@@ -66,8 +66,10 @@ md5_data = {
 }
 
 import sys, os
-try: from hashlib import md5
-except ImportError: from md5 import md5
+try:
+    from hashlib import md5
+except ImportError:
+    from md5 import md5
 
 
 def print_error(msg, **kwargs):

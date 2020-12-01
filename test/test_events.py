@@ -4,17 +4,18 @@ from pymodbus.events import *
 from pymodbus.exceptions import NotImplementedException
 from pymodbus.exceptions import ParameterException
 
+
 class ModbusEventsTest(unittest.TestCase):
-    '''
+    """
     This is the unittest for the pymodbus.device module
-    '''
+    """
 
     def setUp(self):
-        ''' Sets up the test environment '''
+        """ Sets up the test environment """
         pass
 
     def tearDown(self):
-        ''' Cleans up the test environment '''
+        """ Cleans up the test environment """
         pass
 
     def testModbusEventBaseClass(self):
@@ -43,12 +44,12 @@ class ModbusEventsTest(unittest.TestCase):
 
     def testRemoteSentEventEncode(self):
         arguments = {
-            'read'          : True,
-            'slave_abort'   : True,
-            'slave_busy'    : True,
-            'slave_nak'     : True,
-            'write_timeout' : True,
-            'listen'        : True,
+            'read': True,
+            'slave_abort': True,
+            'slave_busy': True,
+            'slave_nak': True,
+            'write_timeout': True,
+            'listen': True,
         }
         event = RemoteSendEvent(**arguments)
         result = event.encode()
@@ -70,8 +71,9 @@ class ModbusEventsTest(unittest.TestCase):
         self.assertEqual(event.value, 0x00)
         self.assertRaises(ParameterException, lambda: event.decode(b'\x04'))
 
-#---------------------------------------------------------------------------#
+
+# ---------------------------------------------------------------------------#
 # Main
-#---------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------#
 if __name__ == "__main__":
     unittest.main()

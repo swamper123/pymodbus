@@ -15,6 +15,7 @@ PyModbus - A Python Modbus Stack
    
 .. important::
    **Note This is a Major release and might affect your existing Async client implementation. Refer examples on how to use the latest async clients.**
+   **This Repo is now just supporting >=Python3.6! --  Python2 and <Python3.6 have been dropped!**
 
 ------------------------------------------------------------
 Summary
@@ -23,9 +24,7 @@ Summary
 Pymodbus is a full Modbus protocol implementation using twisted/torndo/asyncio for its
 asynchronous communications core.  It can also be used without any third
 party dependencies (aside from pyserial) if a more lightweight project is
-needed.  Furthermore, it should work fine under any python version > 2.7
-(including python 3+)
-
+needed.
 
 ------------------------------------------------------------
 Features
@@ -120,7 +119,7 @@ at gitter:  https://gitter.im/pymodbus_dev/Lobby
 ------------------------------------------------------------
 Pymodbus REPL (Read Evaluate Print Loop)
 ------------------------------------------------------------
-Starting with Pymodbus 2.x, pymodbus library comes with handy
+Starting with Pymodbus 3.x, pymodbus library comes with handy
 Pymodbus REPL to quickly run the modbus clients in tcp/rtu modes.
 
 Pymodbus REPL comes with many handy features such as payload decoder 

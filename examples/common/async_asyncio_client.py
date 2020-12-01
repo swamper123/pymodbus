@@ -8,22 +8,15 @@ client implementation from pymodbus with ayncio.
 
 The example is only valid on Python3.4 and above
 """
-from pymodbus.compat import IS_PYTHON3, PYTHON_VERSION
-if IS_PYTHON3 and PYTHON_VERSION >= (3, 4):
-    import asyncio
-    import logging
-    # ----------------------------------------------------------------------- #
-    # Import the required asynchronous client
-    # ----------------------------------------------------------------------- #
-    from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
-    # from pymodbus.client.asynchronous.udp import (
-    #     AsyncModbusUDPClient as ModbusClient)
-    from pymodbus.client.asynchronous import schedulers
-
-else:
-    import sys
-    sys.stderr("This example needs to be run only on python 3.4 and above")
-    sys.exit(1)
+import asyncio
+import logging
+# ----------------------------------------------------------------------- #
+# Import the required asynchronous client
+# ----------------------------------------------------------------------- #
+from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
+# from pymodbus.client.asynchronous.udp import (
+#     AsyncModbusUDPClient as ModbusClient)
+from pymodbus.client.asynchronous import schedulers
 
 from threading import Thread
 import time

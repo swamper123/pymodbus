@@ -15,7 +15,6 @@ import threading
 import itertools
 from collections import namedtuple
 
-from pymodbus.compat import IS_PYTHON3
 
 # we are using the future from the concurrent.futures released with
 # python3. Alternatively we will try the backported library::
@@ -62,10 +61,7 @@ class _Primitives(object):
         :returns: An initialized instance of concurrency primitives
         """
         if in_process:
-            if IS_PYTHON3:
-                from queue import Queue
-            else:
-                from Queue import Queue
+            from queue import Queue
             from threading import Thread
             from threading import Event
             return cls(queue=Queue, event=Event, worker=Thread)
@@ -214,10 +210,7 @@ class ConcurrentClient(ModbusClientMixin):
         :param request: The request to execute
         :returns: A future linked to the call's response
         """
-        if IS_PYTHON3:
-            fut, work_id = Future(), next(self.counter)
-        else:
-            fut, work_id = Future(), self.counter.next()
+        fut, work_id = Future(), next(self.counter)
         self.input_queue.put(WorkRequest(request, work_id))
         self.futures[work_id] = fut
         return fut

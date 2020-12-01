@@ -1,10 +1,6 @@
 #!/usr/bin/env python
-from pymodbus.compat import IS_PYTHON3
 import unittest
-if IS_PYTHON3: # Python 3
-    from unittest.mock import patch, Mock, MagicMock
-else: # Python 2
-    from mock import patch, Mock, MagicMock
+from unittest.mock import patch, MagicMock
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.server.asynchronous import ModbusTcpProtocol, ModbusUdpProtocol
 from pymodbus.server.asynchronous import ModbusServerFactory
@@ -16,10 +12,9 @@ from pymodbus.compat import byte2int
 from pymodbus.transaction import ModbusSocketFramer
 from pymodbus.exceptions import NoSuchSlaveException, ModbusIOException
 
-import sys
-#---------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------#
 # Fixture
-#---------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------#
 import platform
 from distutils.version import LooseVersion
 
@@ -34,36 +29,32 @@ else:
 
 
 class AsynchronousServerTest(unittest.TestCase):
-    '''
+    """
     This is the unittest for the pymodbus.server.asynchronous module
-    '''
+    """
 
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     # Setup/TearDown
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     def setUp(self):
-        '''
+        """
         Initializes the test environment
-        '''
+        """
         values = dict((i, '') for i in range(10))
         identity = ModbusDeviceIdentification(info=values)
 
     def tearDown(self):
-        ''' Cleans up the test environment '''
+        """ Cleans up the test environment """
         pass
 
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     # Test ModbusTcpProtocol
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     def testTcpServerStartup(self):
-        ''' Test that the modbus tcp asynchronous server starts correctly '''
+        """ Test that the modbus tcp asynchronous server starts correctly """
         with patch('twisted.internet.reactor') as mock_reactor:
-            if IS_PYTHON3:
-                console = False
-                call_count = 1
-            else:
-                console = True
-                call_count = 2
+            console = False
+            call_count = 1
             StartTcpServer(context=None, console=console)
             self.assertEqual(mock_reactor.listenTCP.call_count, call_count)
             self.assertEqual(mock_reactor.run.call_count, 1)
@@ -133,9 +124,8 @@ class AsynchronousServerTest(unittest.TestCase):
         self.assertTrue(protocol._send.called)
 
     def testSendTcp(self):
-
         class MockMsg(object):
-            def __init__(self,  msg, resp=False):
+            def __init__(self, msg, resp=False):
                 self.should_respond = resp
                 self.msg = msg
 
@@ -147,21 +137,21 @@ class AsynchronousServerTest(unittest.TestCase):
         protocol.framer = MagicMock()
         protocol.factory = MagicMock()
         protocol.framer.buildPacket = MagicMock(return_value=mock_msg)
-        protocol.transport= MagicMock()
+        protocol.transport = MagicMock()
 
         protocol._send(mock_data)
 
         self.assertTrue(protocol.framer.buildPacket.called)
         self.assertTrue(protocol.transport.write.called)
 
-        mock_data =MockMsg(resp=False, msg="helloworld")
+        mock_data = MockMsg(resp=False, msg="helloworld")
         self.assertEqual(protocol._send(mock_data), None)
 
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     # Test ModbusServerFactory
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     def testModbusServerFactory(self):
-        ''' Test the base class for all the clients '''
+        """ Test the base class for all the clients """
         factory = ModbusServerFactory(store=None)
         self.assertEqual(factory.control.Identity.VendorName, '')
 
@@ -169,9 +159,9 @@ class AsynchronousServerTest(unittest.TestCase):
         factory = ModbusServerFactory(store=None, identity=identity)
         self.assertEqual(factory.control.Identity.VendorName, 'VendorName')
 
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     # Test ModbusUdpProtocol
-    #-----------------------------------------------------------------------#
+    # -----------------------------------------------------------------------#
     def testUdpServerInitialize(self):
         protocol = ModbusUdpProtocol(store=None)
         self.assertEqual(protocol.control.Identity.VendorName, '')
@@ -180,9 +170,8 @@ class AsynchronousServerTest(unittest.TestCase):
         protocol = ModbusUdpProtocol(store=None, identity=identity)
         self.assertEqual(protocol.control.Identity.VendorName, 'VendorName')
 
-
     def testUdpServerStartup(self):
-        ''' Test that the modbus udp asynchronous server starts correctly '''
+        """ Test that the modbus udp asynchronous server starts correctly """
         with patch('twisted.internet.reactor') as mock_reactor:
             StartUdpServer(context=None)
             self.assertEqual(mock_reactor.listenUDP.call_count, 1)
@@ -190,7 +179,7 @@ class AsynchronousServerTest(unittest.TestCase):
 
     @patch("twisted.internet.serialport.SerialPort")
     def testSerialServerStartup(self, mock_sp):
-        ''' Test that the modbus serial asynchronous server starts correctly '''
+        """ Test that the modbus serial asynchronous server starts correctly """
         with patch('twisted.internet.reactor') as mock_reactor:
             StartSerialServer(context=None, port=SERIAL_PORT)
             self.assertEqual(mock_reactor.run.call_count, 1)
@@ -222,6 +211,7 @@ class AsynchronousServerTest(unittest.TestCase):
             t.start()
             time.sleep(2)
             self.assertEqual(mock_reactor.callFromThread.call_count, 1)
+
     def testDatagramReceived(self):
         mock_data = b"\x00\x01\x12\x34\x00\x04\xff\x02\x12\x34"
         mock_addr = 0x01
@@ -241,13 +231,12 @@ class AsynchronousServerTest(unittest.TestCase):
         protocol.control = MagicMock()
         protocol.framer = MagicMock()
         protocol.framer.buildPacket = MagicMock(return_value=mock_data)
-        protocol.transport= MagicMock()
+        protocol.transport = MagicMock()
 
         protocol._send(mock_data, mock_addr)
 
         self.assertTrue(protocol.framer.buildPacket.called)
         self.assertTrue(protocol.transport.write.called)
-
 
     def testUdpExecuteSuccess(self):
         protocol = ModbusUdpProtocol(store=None)
@@ -290,7 +279,6 @@ class AsynchronousServerTest(unittest.TestCase):
         self.assertTrue(reactor.stop.called)
 
     def testIsMainThread(self):
-        import threading
         self.assertTrue(_is_main_thread())
 
 
